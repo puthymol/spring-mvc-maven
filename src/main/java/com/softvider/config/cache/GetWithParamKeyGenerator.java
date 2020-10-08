@@ -1,0 +1,34 @@
+package com.softvider.config.cache;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.cache.interceptor.KeyGenerator;
+
+import java.lang.reflect.Method;
+import java.util.List;
+
+public class GetWithParamKeyGenerator implements KeyGenerator {
+
+    private static final Logger log = LoggerFactory.getLogger(GetKeyGenerator.class);
+
+    @Override
+    public Object generate(Object target, Method method, Object... params) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(method.getName());
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            String jsonString = mapper.writeValueAsString(params);
+            List<String> strings = mapper.readValue(jsonString, new TypeReference<>() {});
+            for(String str: strings){
+                stringBuilder.append("_").append(str);
+            }
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        log.info("cache key => "+ stringBuilder.toString());
+        return stringBuilder.toString();
+    }
+}

@@ -1,0 +1,27 @@
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="ehcache.xsd" updateCheck="true"
+         monitoring="autodetect" dynamicConfig="false">
+
+    <cache name="httpClient"
+           eternal="false"
+           timeToIdleSeconds="3600"
+           timeToLiveSeconds="3600"
+           maxEntriesLocalHeap="10000"
+           maxEntriesLocalDisk="10485760"
+           memoryStoreEvictionPolicy="LFU"
+           transactionalMode="off"
+           statistics="false">
+    </cache>
+
+    <cache name="softvider_cache"
+           eternal="false"
+           timeToIdleSeconds="3600"
+           timeToLiveSeconds="3600"
+           maxEntriesLocalHeap="10000"
+           maxEntriesLocalDisk="10485760"
+           memoryStoreEvictionPolicy="LFU"
+           transactionalMode="off"
+           statistics="false">
+    </cache>
+
+</ehcache>

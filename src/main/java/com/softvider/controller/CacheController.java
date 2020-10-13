@@ -2,19 +2,13 @@ package com.softvider.controller;
 
 import com.softvider.model.LoginReqModel;
 import com.softvider.service.CacheService;
-import com.softvider.service.HomeService;
-import net.sf.ehcache.CacheManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -49,17 +43,6 @@ public class CacheController {
     @CacheEvict(cacheNames = "softvider_cache", allEntries = true) // clear cache
     @RequestMapping(value = "/clear", method = RequestMethod.GET)
     public Map<String, Object> ClearCache() {
-
-//        List<CacheManager> tempManagers = CacheManager.ALL_CACHE_MANAGERS;
-//        for (CacheManager tempCM : tempManagers) {
-//            String[] cacheNames = tempCM.getCacheNames();
-//            for (int i = 0; i < cacheNames.length; i++) {
-//                String cacheName = cacheNames[i];
-//                log.info(cacheName+" - "+ tempCM.getEhcache(cacheName).getKeys().size());
-//                log.info(tempCM.getEhcache(cacheName).getKeys().toString());
-//            }
-//        }
-
         Map<String, Object> jsonString = new HashMap<>();
         jsonString.put("cache", "cleared");
         log.info("Response => {} :" +jsonString);

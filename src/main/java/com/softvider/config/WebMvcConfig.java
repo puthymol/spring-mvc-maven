@@ -70,15 +70,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public CacheConfig cacheConfig() {
-        return CacheConfig
-                .custom()
-                .setMaxObjectSize(Integer.parseInt(this.env.getProperty("softvider.cache.maxObjectSize")))
-                .setMaxCacheEntries(Integer.parseInt(this.env.getProperty("softvider.cache.maxCacheEntries")))
-                .build();
-    }
-
-    @Bean
     public HttpCacheStorage httpCacheStorage() {
         Ehcache ehcache = (Ehcache) this.cacheManager().getCache("httpClient").getNativeCache();
         HttpCacheStorage result = new EhcacheHttpCacheStorage(ehcache);

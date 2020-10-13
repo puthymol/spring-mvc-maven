@@ -1,3 +1,3 @@
 # spring-mvc-maven
-<----- Feature ----->
+*** Feature ***
 logging cache

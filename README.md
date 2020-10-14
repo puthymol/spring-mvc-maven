@@ -1,3 +1,6 @@
 # spring-mvc-maven
-*** Feature ***
-logging cache
+
+## Feature
+- logging
+- cache
+- redis

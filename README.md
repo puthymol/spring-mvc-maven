@@ -4,3 +4,4 @@
 - logging
 - cache
 - redis
+- thread service

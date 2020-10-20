@@ -3,7 +3,8 @@ package com.softvider.controller;
 import com.softvider.service.HomeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
@@ -20,10 +21,10 @@ public class HomeController {
     private static final Logger log = LoggerFactory.getLogger(HomeController.class);
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public Map<String, Object> Home() {
-        return homeService.Home();
+    public ResponseEntity<Map<String, Object>> Home() {
+        Map<String, Object> result = homeService.Home();
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
-
 
     @RequestMapping(value = "/{fileName}", method = RequestMethod.GET)
     public Map<String, Object> Home(@PathVariable(value="fileName") String fileName) {

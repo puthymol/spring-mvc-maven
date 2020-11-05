@@ -15,7 +15,7 @@ public class TestRedis {
         config.setTestOnBorrow(false);
         config.setTestOnReturn(false);
 
-        String redisHost = "18.138.81.206";
+        String redisHost = "13.212.112.125";
         int redisPort = 16379;
         String auth = "1234";
         JedisPool pool = new JedisPool(config, redisHost, redisPort, 3000, auth);

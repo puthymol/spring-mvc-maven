@@ -5,7 +5,6 @@ import com.softvider.config.cache.GetWithParamKeyGenerator;
 import com.softvider.config.cache.PostKeyGenerator;
 import net.sf.ehcache.Ehcache;
 import org.apache.http.client.cache.HttpCacheStorage;
-import org.apache.http.impl.client.cache.CacheConfig;
 import org.apache.http.impl.client.cache.ehcache.EhcacheHttpCacheStorage;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;

@@ -9,6 +9,9 @@ import java.util.Objects;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserModel {
 
+    @JsonProperty("username")
+    private String username;
+
     @JsonProperty("first_name")
     @NotNull(message = "First name must be not null")
     private String firstName;
@@ -19,6 +22,14 @@ public class UserModel {
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     @Override

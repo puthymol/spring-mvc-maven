@@ -23,7 +23,7 @@ public class CacheService {
         if(param != null){
             jsonString.put("name", param);
         }
-        log.info("Response => {} :" +jsonString);
+        log.info("Response => {}", jsonString);
         return jsonString;
     }
 
@@ -32,12 +32,12 @@ public class CacheService {
         ObjectMapper oMapper = new ObjectMapper();
         try {
             String str = oMapper.writeValueAsString(loginReqModel);
-            jsonString = oMapper.readValue(str,  new TypeReference<>() {});
+            jsonString = oMapper.readValue(str,  new TypeReference<Map<String, Object>>() {});
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
 
-        log.info("Response => {} :" +jsonString);
+        log.info("Response => {}", jsonString);
         return jsonString;
     }
 }

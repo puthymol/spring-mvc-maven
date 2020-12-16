@@ -1,12 +1,12 @@
 package com.softvider.config.security;
 
+import com.softvider.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -38,12 +38,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private UserDetailsService userDetailsService;
+    private UserDetailsServiceImpl userDetailsService;
 
     @Autowired
     private PasswordEncoder encoder;
-
-
 
     @Override
     public void configure(final AuthorizationServerSecurityConfigurer oauthServer) {
@@ -53,16 +51,16 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory()
-                .withClient(this.env.getProperty("softvider.oauth2.clientId")).secret(encoder.encode(this.env.getProperty("softvider.oauth2.password")))
+                .withClient(this.env.getProperty("softvider.oauth2.clientId")).secret(encoder.encode(this.env.getProperty("softvider.oauth2.secret")))
                 .authorizedGrantTypes("password", "authorization_code", "refresh_token").scopes("read", "write")
-                .accessTokenValiditySeconds(Integer.parseInt(Objects.requireNonNull(this.env.getProperty("softvider.oauth2.tokenAge")))) //12 Hour
-                .refreshTokenValiditySeconds(Integer.parseInt(Objects.requireNonNull(this.env.getProperty("softvider.oauth2.refreshTokenAge")))) //1 Day
+                .accessTokenValiditySeconds(Integer.parseInt(Objects.requireNonNull(this.env.getProperty("softvider.oauth2.tokenAge"))))
+                .refreshTokenValiditySeconds(Integer.parseInt(Objects.requireNonNull(this.env.getProperty("softvider.oauth2.refreshTokenAge"))))
                 .autoApprove(true);
     }
 
     @Override
     public void configure(final AuthorizationServerEndpointsConfigurer endpoints) {
-        endpoints.tokenStore(tokenStore()).authenticationManager(authenticationManager).accessTokenConverter(accessTokenConverter())
+        endpoints.tokenStore(tokenStore()).authenticationManager(authenticationManager).accessTokenConverter( accessTokenConverter())
                 .userDetailsService(userDetailsService);
     }
 
@@ -73,13 +71,13 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Bean
     public JwtAccessTokenConverter accessTokenConverter() {
-        var userAuthenticationConverter = new DefaultUserAuthenticationConverter();
+        DefaultUserAuthenticationConverter userAuthenticationConverter = new DefaultUserAuthenticationConverter();
         userAuthenticationConverter.setUserDetailsService(userDetailsService);
 
-        var defaultAccessTokenConverter = new DefaultAccessTokenConverter();
+        DefaultAccessTokenConverter defaultAccessTokenConverter = new DefaultAccessTokenConverter();
         defaultAccessTokenConverter.setUserTokenConverter(userAuthenticationConverter);
 
-        var jwtAccessTokenConverter = new JwtAccessTokenConverter();
+        JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
         jwtAccessTokenConverter.setAccessTokenConverter(defaultAccessTokenConverter); // Important
         jwtAccessTokenConverter.setSigningKey("123");
         return jwtAccessTokenConverter;

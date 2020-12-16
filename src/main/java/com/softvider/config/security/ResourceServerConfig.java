@@ -6,7 +6,6 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 
-import java.util.List;
 
 @Configuration
 @SuppressWarnings("deprecation")
@@ -16,20 +15,20 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     private static final String SECURED_READ_SCOPE = "#oauth2.hasScope('read')";
     private static final String SECURED_WRITE_SCOPE = "#oauth2.hasScope('write')";
     private static final String SECURED_PATTERN = "/secured/**";
-    private static final List<String> POST_ANONYMOUS_REQUESTS = List.of(
-            "/client/register",
-            "/otp/anonymous/**",
-            "/ckfinder/**"
-    );
-    private static final List<String> GET_ANONYMOUS_REQUESTS = List.of(
-            "/location/**",
-            "/user/verify/**",
-            "/news-and-article/**",
-            "/key-value/payment-step",
-            "/key-value/about-us",
-            "/key-value/contact-us",
-            "/ckfinder/**"
-    );
+//    private static final List<String> POST_ANONYMOUS_REQUESTS = List.of(
+//            "/client/register",
+//            "/otp/anonymous/**",
+//            "/ckfinder/**"
+//    );
+//    private static final List<String> GET_ANONYMOUS_REQUESTS = List.of(
+//            "/location/**",
+//            "/user/verify/**",
+//            "/news-and-article/**",
+//            "/key-value/payment-step",
+//            "/key-value/about-us",
+//            "/key-value/contact-us",
+//            "/ckfinder/**"
+//    );
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) {
@@ -51,7 +50,6 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
 
         http.authorizeRequests()
-//                .antMatchers("/").permitAll()
                 .antMatchers("/admin/**").authenticated()
                 .anyRequest().authenticated();
     }

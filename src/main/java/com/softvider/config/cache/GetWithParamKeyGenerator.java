@@ -21,7 +21,7 @@ public class GetWithParamKeyGenerator implements KeyGenerator {
         ObjectMapper mapper = new ObjectMapper();
         try {
             String jsonString = mapper.writeValueAsString(params);
-            List<String> strings = mapper.readValue(jsonString, new TypeReference<>() {});
+            List<String> strings = mapper.readValue(jsonString, new TypeReference<List<String>>() {});
             for(String str: strings){
                 stringBuilder.append("_").append(str);
             }

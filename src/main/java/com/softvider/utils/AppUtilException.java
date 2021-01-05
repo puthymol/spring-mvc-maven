@@ -1,10 +1,10 @@
 package com.softvider.utils;
 
-public class AppUtilsException extends Exception {
+public class AppUtilException extends Exception {
 
     private final ExceptionBaseResponse response;
 
-    public AppUtilsException(ExceptionBaseResponse response) {
+    public AppUtilException(ExceptionBaseResponse response) {
         this.response = response;
     }
 

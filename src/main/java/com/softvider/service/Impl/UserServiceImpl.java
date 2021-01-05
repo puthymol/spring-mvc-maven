@@ -5,16 +5,21 @@ import com.softvider.model.AuthenticationRequest;
 import com.softvider.model.BaseResponse;
 import com.softvider.model.UserModel;
 import com.softvider.service.UserService;
-import com.softvider.utils.AppUtilsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private static final Logger log = LoggerFactory.getLogger(HomeController.class);
+
+    public UserServiceImpl() {
+    }
 
     @Override
     public BaseResponse execute(UserModel userModel)  {

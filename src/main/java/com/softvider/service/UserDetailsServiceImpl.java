@@ -2,7 +2,6 @@ package com.softvider.service;
 
 import com.softvider.model.AuthenticationRequest;
 import com.softvider.model.UserModel;
-import com.softvider.utils.AppUtilsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +22,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private static final Logger log = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserAuthentication loadUserByUsername(String username) throws UsernameNotFoundException {
         AuthenticationRequest reqModel = new AuthenticationRequest();
         reqModel.setUsername(username);
         try {
             UserModel userModel = userService.getUserByUsername(reqModel);
-            return new User(userModel.getUsername(), "$2a$04$NlGsa.TIUrRHcD1Rs6Tkc.JV7WYMQosK.OD3w5FObS3POuYta6ATa", new ArrayList<>());
+            userModel.setFirstName("Puthy");
+//            UserAuthentication userAuthentication = new UserAuthentication();
+            return new UserAuthentication(userModel.getUsername(), "$2a$04$NlGsa.TIUrRHcD1Rs6Tkc.JV7WYMQosK.OD3w5FObS3POuYta6ATa", new ArrayList<>(), userModel);
+//            return new User(userModel.getUsername(), "$2a$04$NlGsa.TIUrRHcD1Rs6Tkc.JV7WYMQosK.OD3w5FObS3POuYta6ATa", new ArrayList<>());
         } catch (UsernameNotFoundException e) {
             log.info("Error => {}", e.getMessage());
             throw e;

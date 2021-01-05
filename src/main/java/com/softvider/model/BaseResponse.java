@@ -8,6 +8,11 @@ public class BaseResponse {
     private String statusMessage;
     private Map<String, Object> data;
 
+    public BaseResponse(){
+        this.setStatusCode(200);
+        this.setStatusMessage("Success");
+    }
+
     public int getStatusCode() {
         return statusCode;
     }

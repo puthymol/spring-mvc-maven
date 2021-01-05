@@ -1,37 +1,51 @@
 package com.softvider.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.softvider.config.security.ApplicationSecurityContext;
 import com.softvider.model.BaseResponse;
 import com.softvider.model.UserModel;
 import com.softvider.service.Impl.UserServiceImpl;
-import com.softvider.utils.AppUtils;
-import com.softvider.utils.AppUtilsException;
-import com.softvider.utils.AppUtilsValidationException;
+import com.softvider.utils.AppUtil;
+import com.softvider.utils.AppUtilException;
+import com.softvider.utils.AppUtilValidationException;
 import com.softvider.utils.ExceptionBaseResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-public class UserController extends AppUtils {
+import javax.servlet.http.HttpServletRequest;
 
+@RestController
+public class UserController extends AppUtil {
+
+
+    private final ApplicationSecurityContext applicationSecurityContext = new ApplicationSecurityContext();
     private final UserServiceImpl userService = new UserServiceImpl();
+    private static final Logger log = LoggerFactory.getLogger(HomeController.class);
 
     @RequestMapping(value = "/user/get", method = RequestMethod.POST)
-    public BaseResponse getUser(@RequestBody JsonNode jsonNode) throws AppUtilsException {
+    public BaseResponse getUser(@RequestBody JsonNode jsonNode,  HttpServletRequest httpServletRequest) throws AppUtilException {
         try {
-            UserModel request = AppUtils.convert(jsonNode, UserModel.class);
+            UserModel request = AppUtil.convert(jsonNode, UserModel.class);
+            log.info("Token {}", httpServletRequest.getHeader("authorization"));
+
+            String username =  applicationSecurityContext.authenticatedUser();
+            log.info("Yo {}", username);
+
             return userService.execute(request);
-        } catch (AppUtilsValidationException e) {
+        } catch (AppUtilValidationException e) {
             ExceptionBaseResponse response = new ExceptionBaseResponse();
             response.setStatusCode(201);
             response.setErrors(e.getErrors());
-            throw new AppUtilsException(response);
+            throw new AppUtilException(response);
         }
     }
 
-    @ExceptionHandler(AppUtilsException.class)
-    public ResponseEntity<ExceptionBaseResponse> handleMethodArgumentNotValidException(AppUtilsException exception) {
+    @ExceptionHandler(AppUtilException.class)
+    public ResponseEntity<ExceptionBaseResponse> handleMethodArgumentNotValidException(AppUtilException exception) {
         return new ResponseEntity<>(exception.getTemplateStrategy(), HttpStatus.OK);
     }
+
 }

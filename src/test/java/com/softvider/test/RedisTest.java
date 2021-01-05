@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
-public class TestRedis {
+public class RedisTest {
 
     @Test
     public void testRedis(){

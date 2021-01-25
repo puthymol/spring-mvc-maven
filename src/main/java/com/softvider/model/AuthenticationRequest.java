@@ -1,8 +1,8 @@
 package com.softvider.model;
 
-public class LoginReqModel {
-    private String username;
-    private String password;
+public class AuthenticationRequest {
+    String username;
+    String password;
 
     public String getUsername() {
         return username;

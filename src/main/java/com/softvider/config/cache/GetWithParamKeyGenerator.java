@@ -11,8 +11,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 public class GetWithParamKeyGenerator implements KeyGenerator {
-
-    private static final Logger log = LoggerFactory.getLogger(GetKeyGenerator.class);
+    private static final Logger log = LoggerFactory.getLogger(GetWithParamKeyGenerator.class);
 
     @Override
     public Object generate(Object target, Method method, Object... params) {
@@ -21,7 +20,7 @@ public class GetWithParamKeyGenerator implements KeyGenerator {
         ObjectMapper mapper = new ObjectMapper();
         try {
             String jsonString = mapper.writeValueAsString(params);
-            List<String> strings = mapper.readValue(jsonString, new TypeReference<>() {});
+            List<String> strings = mapper.readValue(jsonString, new TypeReference<List<String>>() {});
             for(String str: strings){
                 stringBuilder.append("_").append(str);
             }

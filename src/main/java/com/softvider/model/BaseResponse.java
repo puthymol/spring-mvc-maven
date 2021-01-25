@@ -9,8 +9,8 @@ public class BaseResponse {
     private Map<String, Object> data;
 
     public BaseResponse(){
-        this.setStatusCode(200);
-        this.setStatusMessage("Success");
+        this.statusCode = 200;
+        this.statusMessage = "Success";
     }
 
     public int getStatusCode() {

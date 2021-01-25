@@ -1,6 +1,6 @@
 package com.softvider.config.security;
 
-import com.softvider.service.UserDetailsServiceImpl;
+import com.softvider.service.user.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -21,7 +21,6 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import javax.inject.Inject;
-import java.util.Objects;
 
 @Configuration
 @EnableAuthorizationServer
@@ -42,27 +41,30 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
-    @Autowired
-    private PasswordEncoder encoder;
+    @Inject private PasswordEncoder passwordEncoder;
 
     @Override
     public void configure(final AuthorizationServerSecurityConfigurer oauthServer) {
-        oauthServer.tokenKeyAccess("permitAll()").checkTokenAccess("isAuthenticated()");
+        oauthServer.passwordEncoder(this.passwordEncoder);
     }
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory()
-                .withClient(this.env.getProperty("softvider.oauth2.clientId")).secret(encoder.encode(this.env.getProperty("softvider.oauth2.secret")))
-                .authorizedGrantTypes("password", "authorization_code", "refresh_token").scopes("read", "write")
-                .accessTokenValiditySeconds(Integer.parseInt(Objects.requireNonNull(this.env.getProperty("softvider.oauth2.tokenAge"))))
-                .refreshTokenValiditySeconds(Integer.parseInt(Objects.requireNonNull(this.env.getProperty("softvider.oauth2.refreshTokenAge"))))
+                .withClient(this.env.getProperty("softvider.oauth2.clientId"))
+                .secret((this.passwordEncoder.encode(this.env.getProperty("softvider.oauth2.secret"))))
+                .authorizedGrantTypes(this.env.getProperty("softvider.oauth2.grantTypes").split(","))
+                .scopes(this.env.getProperty("softvider.oauth2.scopes").split(","))
+                .accessTokenValiditySeconds(Integer.parseInt(this.env.getProperty("softvider.oauth2.tokenAge")))
+                .refreshTokenValiditySeconds(Integer.parseInt(this.env.getProperty("softvider.oauth2.refreshTokenAge")))
                 .autoApprove(true);
     }
 
     @Override
     public void configure(final AuthorizationServerEndpointsConfigurer endpoints) {
-        endpoints.tokenStore(tokenStore()).authenticationManager(authenticationManager).accessTokenConverter( accessTokenConverter())
+        endpoints.tokenStore(tokenStore())
+                .authenticationManager(authenticationManager)
+                .accessTokenConverter(accessTokenConverter())
                 .userDetailsService(userDetailsService);
     }
 
@@ -81,7 +83,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
         JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
         jwtAccessTokenConverter.setAccessTokenConverter(defaultAccessTokenConverter); // Important
-        jwtAccessTokenConverter.setSigningKey("Softvider@123");
+        jwtAccessTokenConverter.setSigningKey(this.env.getProperty("softvider.oauth2.signKey"));
         return jwtAccessTokenConverter;
     }
 

@@ -1,10 +1,11 @@
 package com.softvider.config.security;
 
-import com.softvider.service.UserDetailsServiceImpl;
+import com.softvider.service.user.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -12,39 +13,41 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.provider.error.DefaultOAuth2ExceptionRenderer;
+import org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler;
+import org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint;
+import org.springframework.security.oauth2.provider.error.OAuth2ExceptionRenderer;
 import org.springframework.security.web.AuthenticationEntryPoint;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    private static final String TOKEN_END_POINT = "/oauth/token";
 
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .exceptionHandling()
-                .authenticationEntryPoint(new WebAuthenticationEntryPoint())
-                .and().authorizeRequests()
-                .antMatchers("/oauth/token").permitAll()
-                .anyRequest().authenticated()
-                .and()
+        http.anonymous().disable()
+                .antMatcher(TOKEN_END_POINT)
+                    .authorizeRequests()
+                    .anyRequest()
+                    .authenticated()
+                    .and()
+                .httpBasic()
+                    .authenticationEntryPoint(this.authenticationEntryPoint())
+                    .and()
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-    }
-
-    @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint() {
-        return new WebAuthenticationEntryPoint();
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .and()
+                .exceptionHandling()
+                    .accessDeniedHandler(this.accessDeniedHandler())
+                    .authenticationEntryPoint(this.authenticationEntryPoint());;
     }
 
     @Bean
@@ -78,12 +81,27 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetailsService);
     }
 
-    private static  class WebAuthenticationEntryPoint implements AuthenticationEntryPoint {
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        OAuth2AuthenticationEntryPoint authEntryPoint = new OAuth2AuthenticationEntryPoint();
+        authEntryPoint.setTypeName("Basic");
+        authEntryPoint.setRealmName("security/basic");
+        authEntryPoint.setExceptionRenderer(this.exceptionRenderer());
+        return authEntryPoint;
+    }
 
-        @Override
-        public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-            response.sendError(HttpStatus.FORBIDDEN.value(), HttpStatus.FORBIDDEN.getReasonPhrase());
-        }
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        OAuth2AccessDeniedHandler accessDeniedHandler = new OAuth2AccessDeniedHandler();
+        accessDeniedHandler.setExceptionRenderer(this.exceptionRenderer());
+        return accessDeniedHandler;
+    }
+
+    @Bean
+    public OAuth2ExceptionRenderer exceptionRenderer() {
+        DefaultOAuth2ExceptionRenderer exceptionRenderer = new DefaultOAuth2ExceptionRenderer();
+        exceptionRenderer.setMessageConverters(Arrays.asList(new HttpMessageConverter<?>[] {new MappingJackson2HttpMessageConverter()}));
+        return exceptionRenderer;
     }
 
 }

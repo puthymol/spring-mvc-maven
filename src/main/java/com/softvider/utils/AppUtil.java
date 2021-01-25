@@ -17,7 +17,7 @@ public class AppUtil {
     public static final ObjectMapper objectMapper = new ObjectMapper();
     private static final Logger log = LoggerFactory.getLogger(HomeController.class);
 
-    public static  <T> T convert(Object object, Class<T> clazz) throws AppUtilValidationException {
+    public static  <T> T convertValidate(Object object, Class<T> clazz) throws AppUtilValidationException {
         T request = objectMapper.convertValue(object, clazz);
         Set<ConstraintViolation<T>> violations = validator.validate(request);
         if(!violations.isEmpty()) {
@@ -33,5 +33,9 @@ public class AppUtil {
             log.error("IOException: " + ex.getMessage());
             return null;
         }
+    }
+
+    public static <T> T convert(Object object, Class<T> clazz) {
+        return objectMapper.convertValue(object, clazz);
     }
 }

@@ -1,4 +1,4 @@
-package com.softvider.service;
+package com.softvider.service.user;
 
 import com.softvider.model.UserModel;
 import org.springframework.security.core.GrantedAuthority;

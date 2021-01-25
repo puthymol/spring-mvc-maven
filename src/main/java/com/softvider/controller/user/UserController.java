@@ -1,10 +1,10 @@
-package com.softvider.controller;
+package com.softvider.controller.user;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.softvider.config.security.ApplicationSecurityContext;
 import com.softvider.model.BaseResponse;
 import com.softvider.model.UserModel;
-import com.softvider.service.Impl.UserServiceImpl;
+import com.softvider.service.user.impl.UserServiceImpl;
 import com.softvider.utils.AppUtil;
 import com.softvider.utils.AppUtilException;
 import com.softvider.utils.AppUtilValidationException;
@@ -14,21 +14,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
 public class UserController extends AppUtil {
-
-
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
     private final ApplicationSecurityContext applicationSecurityContext = new ApplicationSecurityContext();
     private final UserServiceImpl userService = new UserServiceImpl();
-    private static final Logger log = LoggerFactory.getLogger(HomeController.class);
 
     @RequestMapping(value = "/user/get", method = RequestMethod.POST)
     public BaseResponse getUser(@RequestBody JsonNode jsonNode,  HttpServletRequest httpServletRequest) throws AppUtilException {
         try {
-            UserModel request = AppUtil.convert(jsonNode, UserModel.class);
+            UserModel request = AppUtil.convertValidate(jsonNode, UserModel.class);
             log.info("Token {}", httpServletRequest.getHeader("authorization"));
 
             String username =  applicationSecurityContext.authenticatedUser();

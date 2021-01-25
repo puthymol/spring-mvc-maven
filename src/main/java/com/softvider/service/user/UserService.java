@@ -1,4 +1,4 @@
-package com.softvider.service;
+package com.softvider.service.user;
 
 import com.softvider.model.AuthenticationRequest;
 import com.softvider.model.BaseResponse;

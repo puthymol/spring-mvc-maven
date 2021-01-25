@@ -7,7 +7,6 @@ import org.springframework.cache.interceptor.KeyGenerator;
 import java.lang.reflect.Method;
 
 public class GetKeyGenerator implements KeyGenerator {
-
 	private static final Logger log = LoggerFactory.getLogger(GetKeyGenerator.class);
 
 	@Override

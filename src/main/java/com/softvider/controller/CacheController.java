@@ -1,23 +1,23 @@
 package com.softvider.controller;
 
-import com.softvider.model.LoginReqModel;
+import com.softvider.model.BookModel;
 import com.softvider.service.CacheService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
-
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/cache")
 public class CacheController {
+    private static final Logger log = LoggerFactory.getLogger(CacheController.class);
 
-    CacheService cacheService = new CacheService();
-
-    private static final Logger log = LoggerFactory.getLogger(HomeController.class);
+    @Inject
+    CacheService cacheService;
 
     @Cacheable(cacheNames = "softvider_cache",
             keyGenerator = "getKeyGenerator")
@@ -36,8 +36,8 @@ public class CacheController {
     @Cacheable(cacheNames = "softvider_cache",
             keyGenerator = "postKeyGenerator")
     @RequestMapping(value = "/post", method = RequestMethod.POST)
-    public Map<String, Object> Post(@RequestBody LoginReqModel loginReqModel) {
-        return cacheService.PostData(loginReqModel);
+    public Map<String, Object> Post(@RequestBody BookModel bookModel) {
+        return cacheService.PostData(bookModel);
     }
 
     @CacheEvict(cacheNames = "softvider_cache", allEntries = true) // clear cache
@@ -45,7 +45,7 @@ public class CacheController {
     public Map<String, Object> ClearCache() {
         Map<String, Object> jsonString = new HashMap<>();
         jsonString.put("cache", "cleared");
-        log.info("Response => {} :" +jsonString);
+        log.info("Response => {}", jsonString);
         return jsonString;
     }
 }

@@ -6,3 +6,4 @@
 - Redis
 - Thread service
 - Encrypt Decrypt data using AES
+- Spring security oauth2

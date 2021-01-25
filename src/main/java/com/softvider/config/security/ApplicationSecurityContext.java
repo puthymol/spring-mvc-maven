@@ -1,7 +1,6 @@
 package com.softvider.config.security;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.softvider.controller.HomeController;
 import com.softvider.service.user.UserAuthentication;
 import com.softvider.utils.AppUtil;
 import org.slf4j.Logger;

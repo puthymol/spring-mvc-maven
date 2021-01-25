@@ -1,7 +1,8 @@
 # spring-mvc-maven
 
 ## Feature
-- logging
-- cache
-- redis
-- thread service
+- Logging
+- Cache
+- Redis
+- Thread service
+- Encrypt Decrypt data using AES

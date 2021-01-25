@@ -1,9 +1,9 @@
-package com.softvider.test;
+package com.softvider.test.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-class Book {
+public class Book {
 
     private String title;
 

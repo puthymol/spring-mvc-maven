@@ -1,16 +1,27 @@
 package com.softvider.model;
 
-import java.util.Map;
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class BaseResponse {
 
     private int statusCode;
     private String statusMessage;
-    private Map<String, Object> data;
+    private JsonNode data;
 
     public BaseResponse(){
         this.statusCode = 200;
         this.statusMessage = "Success";
+    }
+
+    public BaseResponse(JsonNode data){
+        this.statusCode = 200;
+        this.statusMessage = "Success";
+        this.data = data;
+    }
+
+    public BaseResponse(String statusMessage){
+        this.statusCode = 201;
+        this.statusMessage = statusMessage;
     }
 
     public int getStatusCode() {
@@ -29,11 +40,11 @@ public class BaseResponse {
         this.statusMessage = statusMessage;
     }
 
-    public Map<String, Object> getData() {
+    public JsonNode getData() {
         return data;
     }
 
-    public void setData(Map<String, Object> data) {
+    public void setData(JsonNode data) {
         this.data = data;
     }
 }

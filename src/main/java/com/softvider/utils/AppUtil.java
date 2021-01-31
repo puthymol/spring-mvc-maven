@@ -1,7 +1,7 @@
 package com.softvider.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.softvider.controller.HomeController;
+import com.softvider.provider.home.controller.HomeController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

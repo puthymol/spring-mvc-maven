@@ -1,22 +1,17 @@
 package com.softvider.utils;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.softvider.model.BaseResponse;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class ExceptionBaseResponse extends BaseResponse {
-    private Map<String, Object> errors = new HashMap<>();
+    private final JsonNode errors;
 
-    public ExceptionBaseResponse() {
-        this.setStatusCode(201);
-    }
-
-    public Map<String, Object> getErrors() {
-        return errors;
-    }
-
-    public void setErrors(Map<String, Object> errors) {
+    public ExceptionBaseResponse(JsonNode errors) {
+        super("Error");
         this.errors = errors;
+    }
+
+    public JsonNode getErrors() {
+        return errors;
     }
 }

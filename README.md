@@ -3,7 +3,9 @@
 ## Feature
 - Logging
 - Cache
+- Validation
 - Redis
 - Thread service
-- Encrypt Decrypt data using AES
-- Spring security OAuth2
+- Encrypt decrypt data using AES
+- Spring Security OAuth2
+- Database Postgres with certificate connection

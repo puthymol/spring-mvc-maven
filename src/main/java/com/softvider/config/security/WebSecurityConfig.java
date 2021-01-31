@@ -1,6 +1,6 @@
 package com.softvider.config.security;
 
-import com.softvider.service.user.impl.UserDetailsServiceImpl;
+import com.softvider.provider.security.service.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

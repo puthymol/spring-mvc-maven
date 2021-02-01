@@ -1,5 +1,6 @@
 package com.softvider.provider.home.service;
 
+import com.softvider.utils.AppUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ public class HomeService {
     public Map<String, Object> Home() {
         Map<String, Object> jsonString = new HashMap<>();
         jsonString.put("provider", "Softvider");
-        log.info("Response => {}", jsonString);
+        log.info("Response => {}", AppUtil.toJSON(jsonString));
         return jsonString;
     }
 }

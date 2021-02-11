@@ -20,7 +20,7 @@ public class HomeController {
 
     @Inject private HomeService homeService;
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity<Map<String, Object>> Home() {
         Map<String, Object> result = homeService.Home();
         return new ResponseEntity<>(result, HttpStatus.OK);
